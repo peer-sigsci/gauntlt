@@ -1,5 +1,5 @@
 When /^"gobuster" is installed$/ do
-  ensure_cli_installed("dirb")
+  ensure_cli_installed("gobuster")
 end
 
 When /^the GOBUSTER_WORDLISTS environment variable is set$/ do

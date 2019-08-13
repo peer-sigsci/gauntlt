@@ -1,0 +1,23 @@
+@slow @announce
+Feature: Run nosqlmap against a target
+
+Scenario: Identify SQL injection vulnerabilities
+  Given "nosqlmap" is installed
+  And the following profile:
+    | name       | value                                           |
+    | target_host | peeraagaard.com |
+    | uri        | /sql-injection?number_id=1                      |
+    | platform   | MongoDB                                         |
+    | port       | 443                                             |
+    | https      | ON                                              |
+  When I launch a "nosqlmap" attack with:
+    """
+    python /opt/NoSQLMap/nosqlmap.py --attack 1 --victim <target_host> --https <https> --webPort <port>  --platform <platform>
+    """
+  Then the output should contain:
+    """
+DB Access attacks (MongoDB)
+=================
+Checking to see if credentials are needed...
+Couldn't connect to Mongo server.
+    """
