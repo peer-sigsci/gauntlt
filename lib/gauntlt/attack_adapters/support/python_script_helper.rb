@@ -10,6 +10,10 @@ module Gauntlt
         'zap-cli' => 'https://github.com/Grunny/zap-cli'
       }
 
+      def python3_installed?
+        cli_installed?('python3')
+      end
+
       def python_installed?
         cli_installed?('python')
       end
@@ -23,9 +27,23 @@ module Gauntlt
         ENV[shell_variable_name]
       end
 
+      def path_to_python3_script(script_name)
+        shell_variable_name = shell_variable_name_for(script_name)
+        ENV[shell_variable_name]
+      end
+
+      def py3_script_exists?(script_name)
+        path = path_to_python3_script(script_name)
+        File.exists?(path) if path
+      end
+
       def script_exists?(script_name)
         path = path_to_python_script(script_name)
         File.exists?(path) if path
+      end
+
+      def python3_script_installed?(script_name)
+        python3_installed? && py3_script_exists?(script_name)
       end
 
       def python_script_installed?(script_name)
@@ -65,6 +83,41 @@ EOS
 
         end
       end
+    end
+
+    def ensure_python3_script_installed(script_name, debug=false)
+      python3_script_installed?(script_name) || begin
+        shell_variable_name = '$' + shell_variable_name_for(script_name)
+
+        msg = <<-EOS
+    #{script_name}.py not installed or #{shell_variable_name} not set!
+
+    1. Download #{script_name} from: #{DOWNLOAD_URLS[script_name]}
+    2. In your .zshrc or .bash_profile (or whatever), set #{shell_variable_name}
+
+       export #{shell_variable_name.gsub('$', '')}=/path/to/#{script_name}.py
+
+    3. Make sure you have python installed:
+
+       $ which python3
+
+
+        EOS
+
+        if debug
+          msg += <<-EOS
+            python installed : #{python3_installed?}
+            script_exists? : #{script_exists?(script_name)}
+            shell_variable_name: #{shell_variable_name_for(script_name)}
+            path:   #{path_to_python3_script(script_name)}
+            path_via_echo: #{`echo #{'$'+shell_variable_name_for(script_name)}`}
+          EOS
+        end
+
+        raise msg
+
+      end
+    end
     end
   end
 end

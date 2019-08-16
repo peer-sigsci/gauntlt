@@ -1,8 +1,11 @@
-When /^"xsstrike" is installed$/ do
-  ensure_cli_installed("xsstrike")
+Given /^"xsstrike" is installed$/ do
+  ensure_python3_script_installed('xsstrike')
 end
 
-When /^I launch (?:a|an) "xsstrike" attack with:$/ do | command |
+When /^I launch (?:a|an) "xsstrike" attack with:$/ do |command|
+  add_to_profile('xsstrike_path', path_to_python3_script("xsstrike"))
+  add_to_profile('xsstrike', path_to_python3_script("xsstrike"))
+
   run_with_profile command
 end
 # usage: xsstrike.py [-h] [-u TARGET] [--data DATA] [-t THREADS] [--seeds SEEDS] [--json] [--path]
