@@ -12,7 +12,7 @@ Scenario: Identify SQL injection vulnerabilities
     | https      | ON                                              |
   When I launch a "nosqlmap" attack with:
     """
-    python /opt/NoSQLMap/nosqlmap.py --attack 1 --victim <target_host> --https <https> --webPort <port>  --platform <platform>
+    nosqlmap --attack 1 --victim <target_host> --https <https> --webPort <port>  --platform <platform> --uri <uri>
     """
   Then the output should contain:
     """
