@@ -5,21 +5,18 @@ Scenario: Identify XSS vulnerabilities
   Given "xsstrike" is installed
   And the following profile:
     | name       | value                                           |
-    | url        | website                                         |
+    | url        | https://www.scanme.nmap.org/                    |
     | data       | number_id=1                                     |
     | level      | 3                                               |
-    | headers    | "Accept-Language: en-US\nXSStrike-Cookie: XSSTRIKE"          |
+    | headers    | "XSStrike-Cookie: XSSTRIKE"          |
   When I launch a "xsstrike" attack with:
     """
-    xsstrike -u <url> --crawl -l <level> --headers <headers>
+    python3 /opt/XSStrike/xsstrike.py -u <url> --crawl -l <level> --headers <headers>
     """
   Then the output should contain:
-    """
-DB Access attacks (MongoDB)
-=================
-Checking to see if credentials are needed...
-Couldn't connect to Mongo server.
-    """
+"""
+!] Progress: 1/1
+"""
 
 # usage: xsstrike.py [-h] [-u TARGET] [--data DATA] [-t THREADS] [--seeds SEEDS] [--json] [--path]
 #                    [--fuzzer] [--update] [--timeout] [--params] [--crawl] [--blind]

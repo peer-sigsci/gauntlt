@@ -83,7 +83,6 @@ EOS
 
         end
       end
-    end
 
     def ensure_python3_script_installed(script_name, debug=false)
       python3_script_installed?(script_name) || begin
